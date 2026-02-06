@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Wordsmithery Content Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --tw-bg-opacity: 1;
+        --purple-glow: rgba(143, 68, 173, 0.4);
+      }
+
+      * {
+        -webkit-tap-highlight-color: transparent !important;
+        box-sizing: border-box;
+      }
+
+      :focus:not(:focus-visible) {
+        outline: none !important;
+      }
+
+      body {
+        margin: 0;
+        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+        background-color: #050208;
+        color: #ffffff;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+      
+      .cosmic-bg {
+        background: radial-gradient(circle at 50% 50%, #12061f 0%, #050208 100%);
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+      }
+      
+      .nebula-1 {
+        position: fixed;
+        top: -20%;
+        left: -10%;
+        width: 80%;
+        height: 80%;
+        background: radial-gradient(circle, rgba(143, 68, 173, 0.12) 0%, transparent 70%);
+        filter: blur(100px);
+        z-index: -1;
+        animation: float 25s ease-in-out infinite alternate;
+      }
+
+      .nebula-2 {
+        position: fixed;
+        bottom: -20%;
+        right: -10%;
+        width: 70%;
+        height: 70%;
+        background: radial-gradient(circle, rgba(68, 108, 173, 0.08) 0%, transparent 70%);
+        filter: blur(100px);
+        z-index: -1;
+        animation: float 30s ease-in-out infinite alternate-reverse;
+      }
+
+      @keyframes float {
+        0% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.8; }
+        100% { transform: translate3d(3%, 3%, 0) scale(1.05); opacity: 1; }
+      }
+
+      .star-field {
+        position: fixed;
+        inset: 0;
+        background-image: 
+          radial-gradient(1px 1px at 20px 30px, #eee, rgba(0,0,0,0)),
+          radial-gradient(1px 1px at 150px 150px, #fff, rgba(0,0,0,0)),
+          radial-gradient(1.5px 1.5px at 300px 450px, #ddd, rgba(0,0,0,0)),
+          radial-gradient(1px 1px at 600px 200px, #fff, rgba(0,0,0,0));
+        background-repeat: repeat;
+        background-size: 400px 400px;
+        opacity: 0.08;
+        z-index: -1;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        outline: 1px solid transparent;
+        background-clip: padding-box;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+        isolation: isolate;
+      }
+      
+      .gradient-border-button {
+        background: #8F44AD;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background-clip: padding-box;
+        outline: 1px solid transparent;
+      }
+      
+      .gradient-border-button:hover {
+        box-shadow: 0 0 30px rgba(143, 68, 173, 0.4);
+        transform: translateY(-2px) translateZ(0) scale(1.01);
+        background: #9b59b6;
+      }
+
+      .gradient-border-button:active {
+        transform: translateY(0) translateZ(0) scale(0.98);
+      }
+
+      @keyframes enter {
+        from {
+          opacity: 0;
+          transform: translate3d(0, 15px, 0) scale3d(0.99, 0.99, 1);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+        }
+      }
+
+      .animate-in {
+        animation-name: enter;
+        animation-fill-mode: both;
+        will-change: transform, opacity;
+      }
+
+      .duration-700 { animation-duration: 700ms; }
+      .duration-500 { animation-duration: 500ms; }
+      .duration-300 { animation-duration: 300ms; }
+
+      @keyframes slide-up {
+        from { transform: translate3d(0, 20px, 0); opacity: 0; }
+        to { transform: translate3d(0, 0, 0); opacity: 1; }
+      }
+      
+      .animate-slide-up {
+        animation: slide-up 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        will-change: transform, opacity;
+      }
+      
+      .tab-content-wrapper {
+        contain: layout style;
+        perspective: 1000px;
+      }
+
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+      }
+    </style>
+    <script>
+      // Shim process.env to prevent ReferenceErrors in the browser
+      window.process = window.process || { env: {} };
+    </script>
+    <script type="importmap">
+    {
+      "imports": {
+        "react/": "https://esm.sh/react@^19.2.4/",
+        "react": "https://esm.sh/react@^19.2.4",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+        "@google/genai": "https://esm.sh/@google/genai@^1.38.0"
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- Explicit module entry point -->
+    <script type="module" src="index.tsx"></script>
+  </body>
+</html>
