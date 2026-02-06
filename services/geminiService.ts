@@ -1,6 +1,4 @@
 
-import { GoogleGenAI } from "@google/genai";
-
 export interface GenerateContentParams {
   toneName: string;
   toneDescription: string;
@@ -9,49 +7,59 @@ export interface GenerateContentParams {
   details: string;
 }
 
+/**
+ * Generates marketing content by calling the configured external webhook endpoint.
+ * This replaces direct direct SDK calls to allow for centralized workflow orchestration.
+ */
 export const generateContent = async (params: GenerateContentParams): Promise<string> => {
-  const { toneName, toneDescription, region, promotion, details } = params;
-
-  // Initialize the Gemini API client
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  
-  const systemPrompt = `You are a world-class Senior Brand Strategist and Expert Copywriter at a global luxury hospitality group. 
-Your task is to craft highly compelling, region-specific marketing content for the brand "${toneName}".
-
-BRAND DNA FOR ${toneName}:
-${toneDescription}
-
-GUIDELINES:
-1. ADAPT TO REGION: Ensure the cultural nuances, idioms, and values of "${region}" are reflected.
-2. CAMPAIGN CONTEXT: This is for a "${promotion}".
-3. KEY DETAILS: ${details}
-4. FORMAT: Provide the content as a finished marketing draft. Do not include meta-commentary like "Here is your copy."
-5. TONE: Stick strictly to the brand identity provided above.`;
-
-  const userPrompt = `Generate a marketing message for the ${region} region about our ${promotion}. 
-  The specific campaign details are: ${details}. 
-  Ensure it embodies the ${toneName} identity perfectly.`;
+  const endpoint = 'https://n8n.srv846726.hstgr.cloud/webhook/5c2aa3b8-401c-4988-9f2e-2fad357496b4';
 
   try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-preview',
-      contents: userPrompt,
-      config: {
-        systemInstruction: systemPrompt,
-        temperature: 0.8,
-        topP: 0.95,
-        topK: 64,
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        ...params,
+        timestamp: new Date().toISOString(),
+        source: 'wordsmithery-ui'
+      }),
     });
 
-    const text = response.text;
-    if (!text) {
-      throw new Error("Gemini returned empty content.");
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new Error(`Generation Engine Error (${response.status}): ${errorBody || response.statusText}`);
     }
+
+    const rawResponse = await response.text();
     
-    return text.trim();
+    // Attempt to handle various response formats from n8n (JSON objects, arrays, or plain text)
+    try {
+      const parsed = JSON.parse(rawResponse);
+      
+      // If it's a simple string wrapped in JSON
+      if (typeof parsed === 'string') return parsed.trim();
+      
+      // If it's an array (typical n8n output structure)
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        const item = parsed[0];
+        if (typeof item === 'string') return item.trim();
+        return (item.text || item.content || item.output || JSON.stringify(item)).trim();
+      }
+      
+      // If it's an object, look for common content keys
+      if (typeof parsed === 'object' && parsed !== null) {
+        return (parsed.text || parsed.content || parsed.output || JSON.stringify(parsed)).trim();
+      }
+
+      return rawResponse.trim();
+    } catch (e) {
+      // If it's not valid JSON, treat the raw response as the generated content
+      return rawResponse.trim();
+    }
   } catch (error) {
-    console.error("Gemini Generation Error:", error);
-    throw new Error("Failed to weave content with Gemini Intelligence.");
+    console.error("Wordsmithery API Error:", error);
+    throw new Error(error instanceof Error ? error.message : "The generation engine is currently unreachable.");
   }
 };
