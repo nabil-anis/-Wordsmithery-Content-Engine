@@ -1,7 +1,8 @@
 
 export enum AppTab {
   DASHBOARD = 'dashboard',
-  CONFIG = 'config'
+  CONFIG = 'config',
+  ABOUT = 'about'
 }
 
 export interface ToneOption {
