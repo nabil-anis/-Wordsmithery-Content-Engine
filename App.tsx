@@ -146,7 +146,7 @@ const App: React.FC = () => {
         <nav className="flex p-1 glass-card rounded-full border-white/10 shadow-[0_15px_30px_rgba(0,0,0,0.4)] relative">
           <button 
             onClick={() => { setActiveTab(AppTab.DASHBOARD); handleBack(); }}
-            className={`relative z-10 px-8 md:px-10 py-2.5 rounded-full text-[10px] font-black tracking-widest uppercase transition-all duration-500 ${
+            className={`relative z-10 px-10 md:px-12 py-2.5 rounded-full text-[10px] font-black tracking-widest uppercase transition-all duration-500 ${
               activeTab === AppTab.DASHBOARD ? 'bg-white text-purple-900 shadow-xl scale-105' : 'text-white/30 hover:text-white'
             }`}
           >
@@ -154,19 +154,11 @@ const App: React.FC = () => {
           </button>
           <button 
             onClick={() => setActiveTab(AppTab.CONFIG)}
-            className={`relative z-10 px-8 md:px-10 py-2.5 rounded-full text-[10px] font-black tracking-widest uppercase transition-all duration-500 ${
+            className={`relative z-10 px-10 md:px-12 py-2.5 rounded-full text-[10px] font-black tracking-widest uppercase transition-all duration-500 ${
               activeTab === AppTab.CONFIG ? 'bg-white text-purple-900 shadow-xl scale-105' : 'text-white/30 hover:text-white'
             }`}
           >
             Settings
-          </button>
-          <button 
-            onClick={() => setActiveTab(AppTab.ABOUT)}
-            className={`relative z-10 px-8 md:px-10 py-2.5 rounded-full text-[10px] font-black tracking-widest uppercase transition-all duration-500 ${
-              activeTab === AppTab.ABOUT ? 'bg-white text-purple-900 shadow-xl scale-105' : 'text-white/30 hover:text-white'
-            }`}
-          >
-            About
           </button>
         </nav>
       </header>
@@ -307,7 +299,7 @@ const App: React.FC = () => {
               </div>
             )}
           </div>
-        ) : activeTab === AppTab.CONFIG ? (
+        ) : (
           <div key="settings-tab" className="max-w-5xl mx-auto animate-in duration-500 pb-32">
             <div className="glass-card rounded-[2.5rem] p-12 space-y-12 border-white/5 shadow-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-purple-500/5 blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
@@ -397,83 +389,6 @@ const App: React.FC = () => {
                     <p className="text-white/40 leading-relaxed whitespace-pre-wrap text-lg font-light tracking-wide h-64 overflow-y-auto custom-scrollbar">{config.toneBDescription}</p>
                   )}
                 </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div key="about-tab" className="max-w-4xl mx-auto animate-in duration-500 pb-32 px-4">
-            <div className="space-y-12">
-              <section className="glass-card rounded-[2.5rem] p-10 md:p-16 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-                <h2 className="text-4xl font-extrabold tracking-tight mb-6">The Philosophy</h2>
-                <div className="space-y-6 text-white/60 text-xl font-light leading-relaxed tracking-wide">
-                  <p>
-                    Wordsmithery is not just a copywriting tool; it is a **Linguistic Engine** designed for the modern brand strategist. In a world of generic AI outputs, we prioritize the "Linguistic DNA" of your brand identities.
-                  </p>
-                  <p>
-                    By leveraging **Gemini 3 Pro**, we bridge the gap between institutional authority (The Foundation) and conversational edge (The Challenger), ensuring your message resonates globally without losing its soul.
-                  </p>
-                </div>
-              </section>
-
-              <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {[
-                  { 
-                    step: "01", 
-                    title: "Identity Selection", 
-                    desc: "Choose between your Parent Brand's quiet authority or M Social's bold challenger voice." 
-                  },
-                  { 
-                    step: "02", 
-                    title: "Regional Reach", 
-                    desc: "Target multiple global markets simultaneously. The engine adapts nuance for every region." 
-                  },
-                  { 
-                    step: "03", 
-                    title: "Creative Orchestration", 
-                    desc: "Provide the core brief, and let the engine weave finished, high-performance drafts." 
-                  }
-                ].map((item, idx) => (
-                  <div key={idx} className="glass-card rounded-[1.5rem] p-8 border-white/5 flex flex-col items-center text-center">
-                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-400 mb-4">{item.step}</span>
-                    <h3 className="text-xl font-bold mb-3">{item.title}</h3>
-                    <p className="text-sm text-white/40 font-light leading-relaxed">{item.desc}</p>
-                  </div>
-                ))}
-              </section>
-
-              <section className="glass-card rounded-[2rem] p-12 border-white/5">
-                <div className="flex items-center gap-6 mb-8">
-                  <div className="w-12 h-12 rounded-2xl bg-purple-500/20 flex items-center justify-center text-purple-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                  </div>
-                  <h2 className="text-2xl font-extrabold tracking-tight">Manual & Usage</h2>
-                </div>
-                
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 text-sm text-white/50 font-light leading-relaxed">
-                  <div className="space-y-4">
-                    <h4 className="text-white font-bold uppercase tracking-widest text-[10px]">Configuring Tones</h4>
-                    <p>Head to **Settings** to refine the "Linguistic Core" descriptions. The better you define the brand's personality, the more accurate the generated results will be.</p>
-                  </div>
-                  <div className="space-y-4">
-                    <h4 className="text-white font-bold uppercase tracking-widest text-[10px]">Managing Reach</h4>
-                    <p>Select multiple regions to generate localized variations of your campaign. Each draft is unique to its target market's cultural context.</p>
-                  </div>
-                  <div className="space-y-4">
-                    <h4 className="text-white font-bold uppercase tracking-widest text-[10px]">Draft Intelligence</h4>
-                    <p>The **Deployment Engine** uses a high-temperature model for creativity balanced with strict system instructions to maintain brand guardrails.</p>
-                  </div>
-                  <div className="space-y-4">
-                    <h4 className="text-white font-bold uppercase tracking-widest text-[10px]">Security</h4>
-                    <p>Your creative briefs are processed securely via the Gemini API. We prioritize data integrity and professional standards in every interaction.</p>
-                  </div>
-                </div>
-              </section>
-
-              <div className="text-center pt-8">
-                <p className="text-[9px] text-white/20 font-black uppercase tracking-[0.5em]">
-                  Engine Version 2.1.0 • Powered by Gemini 3 Pro
-                </p>
               </div>
             </div>
           </div>
