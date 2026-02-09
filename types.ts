@@ -34,8 +34,5 @@ export const PROMOTIONS = [
 ];
 
 export interface Configuration {
-  toneAName: string;
-  toneADescription: string;
-  toneBName: string;
-  toneBDescription: string;
+  tones: ToneOption[];
 }
