@@ -12,7 +12,7 @@ export interface GenerateContentParams {
  * This replaces direct direct SDK calls to allow for centralized workflow orchestration.
  */
 export const generateContent = async (params: GenerateContentParams): Promise<string> => {
-  const endpoint = 'https://n8n.srv846726.hstgr.cloud/webhook/5c2aa3b8-401c-4988-9f2e-2fad357496b4';
+  const endpoint = 'https://n8n.srv1311717.hstgr.cloud/webhook/5c2aa3b8-401c-4988-9f2e-2fad357496b4';
 
   try {
     const response = await fetch(endpoint, {
