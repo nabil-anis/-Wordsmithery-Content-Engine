@@ -135,7 +135,7 @@ const App: React.FC = () => {
         const region = selectedRegions[i];
         setGenProgress(prev => ({ ...prev, current: i + 1, region }));
 
-        const content = await generateContent({
+        const rawContent = await generateContent({
           toneName: toneName,
           toneDescription: toneDesc,
           region: region,
@@ -143,12 +143,15 @@ const App: React.FC = () => {
           details: keyDetails
         });
 
+        // Clean up recurring header like *===WEBSITE - Country ===*
+        const cleanedContent = rawContent.replace(/\*===WEBSITE - .* ===\*/g, '').trim();
+
         newResults.push({
           id: `${region}-${Date.now()}`,
           region,
           tone: toneName,
           promotion: selectedPromotion,
-          content
+          content: cleanedContent
         });
       }
 
@@ -289,7 +292,7 @@ const App: React.FC = () => {
                     {isGenerating ? (
                       <>
                         <div className="w-5 h-5 border-[2px] border-white/30 border-t-white rounded-full animate-spin" />
-                        Weaving
+                        Working
                       </>
                     ) : (
                       <>
