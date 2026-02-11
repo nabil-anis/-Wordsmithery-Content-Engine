@@ -33,24 +33,64 @@ export const generateContent = async (params: GenerateContentParams): Promise<st
     }
 
     const rawResponse = await response.text();
-    
+
     // Attempt to handle various response formats from n8n (JSON objects, arrays, or plain text)
     try {
       const parsed = JSON.parse(rawResponse);
-      
-      // If it's a simple string wrapped in JSON
-      if (typeof parsed === 'string') return parsed.trim();
-      
-      // If it's an array (typical n8n output structure)
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        const item = parsed[0];
-        if (typeof item === 'string') return item.trim();
-        return (item.text || item.content || item.output || JSON.stringify(item)).trim();
-      }
-      
-      // If it's an object, look for common content keys
-      if (typeof parsed === 'object' && parsed !== null) {
-        return (parsed.text || parsed.content || parsed.output || JSON.stringify(parsed)).trim();
+
+      // Recursive helper to find "text" or "content" or "output" in deep structures
+      const extractDeepContent = (data: any): string | null => {
+        if (!data) return null;
+
+        // If it's a simple string, it might be the content or a JSON string
+        if (typeof data === 'string') {
+          try {
+            const nested = JSON.parse(data);
+            if (typeof nested === 'object') return extractDeepContent(nested);
+            return data;
+          } catch (e) {
+            return data;
+          }
+        }
+
+        // If it's an array, look in the first item
+        if (Array.isArray(data) && data.length > 0) {
+          return extractDeepContent(data[0]);
+        }
+
+        // if it's an object, search for keys
+        if (typeof data === 'object') {
+          // Special case for the structure provided by user: output -> content -> text
+          // or direct content/text keys
+          const priorityKeys = ['text', 'content', 'output'];
+          for (const key of priorityKeys) {
+            if (data[key]) {
+              const res = extractDeepContent(data[key]);
+              if (res) return res;
+            }
+          }
+
+          // If no specific keys, return stringified object as fallback
+          return JSON.stringify(data);
+        }
+
+        return String(data);
+      };
+
+      const extracted = extractDeepContent(parsed);
+
+      if (extracted) {
+        // One final check: if the extracted string is itself a JSON string containing a "content" field
+        // (common in some LLM outputs)
+        try {
+          const inner = JSON.parse(extracted);
+          if (inner && typeof inner === 'object' && inner.content) {
+            return inner.content.trim();
+          }
+        } catch (e) {
+          // Not a JSON string with content field, return as is
+        }
+        return extracted.trim();
       }
 
       return rawResponse.trim();

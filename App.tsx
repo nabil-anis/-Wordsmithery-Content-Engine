@@ -143,8 +143,8 @@ const App: React.FC = () => {
           details: keyDetails
         });
 
-        // Clean up recurring header like *===WEBSITE - Country ===*
-        const cleanedContent = rawContent.replace(/\*===WEBSITE - .* ===\*/g, '').trim();
+        // Clean up recurring headers like *===WEBSITE - Country ===* or === WEBSITE - GLOBAL ===
+        const cleanedContent = rawContent.replace(/\*?={3,}\s*WEBSITE\s*-\s*.*?\s*={3,}\*?/gi, '').trim();
 
         newResults.push({
           id: `${region}-${Date.now()}`,
@@ -350,9 +350,26 @@ const App: React.FC = () => {
 
               <header className="border-b border-white/5 pb-8 relative z-10 flex justify-between items-end">
                 <div className="space-y-3">
-                  <h2 className="text-3xl font-extrabold tracking-tight text-white">Linguistic Core</h2>
+                  <div className="flex items-center gap-3">
+                    <h2 className="text-3xl font-extrabold tracking-tight text-white">Brand Voice</h2>
+                    <div className="group relative">
+                      <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 cursor-help hover:bg-white/10 hover:text-white transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg>
+                      </div>
+                      {/* Tooltip Wrapper - pt-4 creates a bridge between icon and content */}
+                      <div className="absolute left-0 top-full pt-4 w-80 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[100]">
+                        <div className="p-6 rounded-2xl bg-black/95 border border-white/10 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative">
+                          <p className="text-xs leading-relaxed text-white/70 font-light">
+                            Describe how your brand should sound when it communicates. Include tone, attitude, and personality. You can reference things like <span className="text-purple-400">confident</span> or <span className="text-purple-400">approachable</span>, <span className="text-purple-400">formal</span> or <span className="text-purple-400">casual</span>, <span className="text-purple-400">playful</span> or <span className="text-purple-400">serious</span>. If helpful, mention words or phrases the brand should use or avoid, and how it should make people feel.
+                          </p>
+                          {/* Arrow */}
+                          <div className="absolute top-0 left-3 w-3 h-3 bg-black/95 border-t border-l border-white/10 -translate-y-1/2 rotate-45" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <p className="text-white/40 font-medium text-lg leading-relaxed max-w-xl font-light">
-                    Define the linguistic DNA of your brand identities.
+                    Set the way your brand speaks.
                   </p>
                 </div>
                 <button
